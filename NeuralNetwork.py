@@ -16,14 +16,20 @@ def sigmoid_deriv(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 # Tokenize the data
-word_Context_NegContext, vocab = vector.getTokens()
+word_Context_NegContext, inverse_vocab = vector.getTokens()
+
+print(type(inverse_vocab))
+print(inverse_vocab[0])
 
 # Prepare the input data for the neural network
 X = []
 y = []
+words_used = []
 
-for i in range(int(len(word_Context_NegContext))/3):
-    word = vocab[word_Context_NegContext[i]]
+for i in range(int(len(word_Context_NegContext)/3.0)):
+    if not words_used.__contains__(word_Context_NegContext[i][0]):
+        words_used.append(word_Context_NegContext[i][0])
+        word = inverse_vocab[word_Context_NegContext[i][0]]
     context_words = word_Context_NegContext[i+1]
     negative_context_words = word_Context_NegContext[i+2]
 

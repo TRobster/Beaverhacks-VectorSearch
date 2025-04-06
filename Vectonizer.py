@@ -78,7 +78,7 @@ def getTokens():
     # print(dictonary)
 
     numNegSamp = 4
-    print(r.randint(0, len(dictonary)))
+    print("rand num", r.randint(0, len(dictonary)))
 
     def returnNegContext(target_num, dic):
         negContextIndicies = []
@@ -93,14 +93,22 @@ def getTokens():
 
     word_Context_NegContext = []
 
-    print(len(vocab))
+    print("vocab len: ", len(vocab))
+    print("token len: ", len(tokens))
+    print(type(tokens))
+    # for i in range(len(tokens)):
+    #     for token in tokens[i]:
+    #         print(token)
 
-    for word in range(len(dictonary)):
-        # print(inverse_vocab[i]  returnContext(i  dictonary))
-        # print(inverse_vocab[word]  word  returnContext(word  dictonary)  returnNegContext(word  dictonary))
-        word_Context_NegContext.append([inverse_vocab[word]])
-        word_Context_NegContext.append(returnContext(word, dictonary))
-        word_Context_NegContext.append(returnNegContext(word, dictonary))
+    for i in range(100):
+        for token in tokens[i]:
+            # print(inverse_vocab[i]  returnContext(i  dictonary))
+            # print(inverse_vocab[word]  word  returnContext(word  dictonary)  returnNegContext(word  dictonary))
+            word_Context_NegContext.append([vocab[token]])
+            word_Context_NegContext.append(returnContext(vocab[token], dictonary))
+            word_Context_NegContext.append(returnNegContext(vocab[token], dictonary))
 
-    print(len(word_Context_NegContext)/3)
-    return word_Context_NegContext, vocab
+    # print(len(word_Context_NegContext))/3)
+    return word_Context_NegContext, inverse_vocab
+
+# getTokens()
