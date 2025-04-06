@@ -1,6 +1,16 @@
 import random as r
 import numpy as np
 
+# Avoid Storing the Entire File in Memory: Instead of reading the entire file into memory (testData = test.read()), read it line by line. This avoids holding the entire file content in memory, which is inefficient for large files.
+
+# Efficient Tokenization: Process the CSV file line by line and immediately work with tokens. This eliminates the need to store unnecessary intermediate data (like splitData and data).
+
+# Improve Vocabulary Construction: Use defaultdict or Counter to handle vocabulary more efficiently, avoiding the need for explicit checking (if token not in vocab).
+
+# Parallelize Context Creation: You can optimize the creation of context pairs (tupleArray) by avoiding nested loops and redundant lookups.
+
+# Optimize Negative Sampling: Use efficient random number generation and avoid checking membership in a list with __contains__.
+
 def getTokens():
     # artist,artistIds,asciiName,attractionLights,availability,boosterTypes,borderColor,cardParts,colorIdentity,colorIndicator,colors,defense,duelDeck,edhrecRank,edhrecSaltiness,faceConvertedManaCost,faceFlavorName,faceManaValue,faceName,finishes,flavorName,flavorText,frameEffects,frameVersion,hand,hasAlternativeDeckLimit,hasContentWarning,hasFoil,hasNonFoil,isAlternative,isFullArt,isFunny,isGameChanger,isOnlineOnly,isOversized,isPromo,isRebalanced,isReprint,isReserved,isStarter,isStorySpotlight,isTextless,isTimeshifted,keywords,language,layout,leadershipSkills,life,loyalty,manaCost,manaValue,name,number,originalPrintings,originalReleaseDate,originalText,originalType,otherFaceIds,power,printings,promoTypes,rarity,rebalancedPrintings,relatedCards,securityStamp,setCode,side,signature,sourceProducts,subsets,subtypes,supertypes,text,toughness,type,types,uuid,variations,watermark
     # data = "the sun shined on the white road"
@@ -42,7 +52,7 @@ def getTokens():
     # print(example_sequence)
 
     tupleArray = []
-    windowSize = 2
+    windowSize = 5
 
     for i in range(1, windowSize + 1):
         for key, word in inverse_vocab.items():
@@ -77,12 +87,12 @@ def getTokens():
     # print(tupleArray)
     # print(dictonary)
 
-    numNegSamp = 4
+    numNegSamp = 5
     print("rand num", r.randint(0, len(dictonary)))
 
     def returnNegContext(target_num, dic):
         negContextIndicies = []
-        for i in range(5):
+        for i in range(numNegSamp):
             while True:
                 negSamp = r.randint(0, len(dictonary))
                 a = returnContext(i, dic)
@@ -100,7 +110,7 @@ def getTokens():
     #     for token in tokens[i]:
     #         print(token)
 
-    for i in range(100):
+    for i in range(500):
         for token in tokens[i]:
             # print(inverse_vocab[i]  returnContext(i  dictonary))
             # print(inverse_vocab[word]  word  returnContext(word  dictonary)  returnNegContext(word  dictonary))
