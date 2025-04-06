@@ -20,6 +20,8 @@ class SkipGramWord2Vec:
         while context >= vocab_size:
             context -= vocab_size
         context_vector = self.context_embeddings[context]
+        # print(inverse_vocab[context])
+        # print(inverse_vocab[target[0]])
         
         # Compute dot product between target and context
         score = np.dot(target_vector, context_vector)
@@ -91,6 +93,10 @@ def train(skipgram_model, target_words, context_words, labels, epochs=10, batch_
             batch_targets = target_words[i:i + batch_size]
             batch_contexts = context_words[i:i + batch_size]
             batch_labels = labels[i:i + batch_size]
+
+            # print("batch targs: ",batch_targets)
+            # print("batch contex: ",batch_contexts)
+            # print("batch lab: ",batch_labels)
             
             batch_loss = 0
             for target, context, label in zip(batch_targets, batch_contexts, batch_labels):
@@ -131,11 +137,11 @@ skipgram_model = SkipGramWord2Vec(vocab_size=vocab_size, embedding_dim=embedding
 target_words, context_words, labels = prepare_data(word_Context_NegContext, vocab_size)
 
 # Train the model
-train(skipgram_model, target_words, context_words, labels, epochs=10, batch_size=64)
+train(skipgram_model, target_words, context_words, labels, epochs=100, batch_size=128)
 
 # After training, perform a vector search
 vocab = {index: token for token, index in inverse_vocab.items()}
-query_word = vocab["zombie"]  # Query word example
+query_word = vocab["decrease"]  # Query word example
 similar_words = get_similar_words(query_word, skipgram_model)
 print(f"Similar words to '{inverse_vocab[query_word]}':")
 for i in range(len(similar_words)):

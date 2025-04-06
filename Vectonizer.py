@@ -41,7 +41,7 @@ def getTokens():
             if token not in vocab:
                 vocab[token] = index
                 index += 1
-    # vocab_size = len(vocab)
+    vocab_size = len(vocab)
     # print(vocab_size)
     # print(vocab)
 
@@ -52,7 +52,7 @@ def getTokens():
     # print(example_sequence)
 
     tupleArray = []
-    windowSize = 5
+    windowSize = 2
 
     for i in range(1, windowSize + 1):
         for key, word in inverse_vocab.items():
@@ -87,7 +87,7 @@ def getTokens():
     # print(tupleArray)
     # print(dictonary)
 
-    numNegSamp = 5
+    numNegSamp = 2
     print("rand num", r.randint(0, len(dictonary)))
 
     def returnNegContext(target_num, dic):
@@ -110,15 +110,29 @@ def getTokens():
     #     for token in tokens[i]:
     #         print(token)
 
-    for i in range(500):
+    for i in range(len(tokens)):
         for token in tokens[i]:
             # print(inverse_vocab[i]  returnContext(i  dictonary))
             # print(inverse_vocab[word]  word  returnContext(word  dictonary)  returnNegContext(word  dictonary))
             word_Context_NegContext.append([vocab[token]])
             word_Context_NegContext.append(returnContext(vocab[token], dictonary))
             word_Context_NegContext.append(returnNegContext(vocab[token], dictonary))
+            print("I'm working wooo, ", i, " of ", len(tokens))
 
     # print(len(word_Context_NegContext))/3)
     return word_Context_NegContext, inverse_vocab
 
-# getTokens()
+def write_to_file():
+    word_context_negcontext, inverse_vocab = getTokens()
+
+    # Convert the result into strings before writing
+    word_context_negcontext_str = str(word_context_negcontext)
+    inverse_vocab_str = str(inverse_vocab)
+
+    with open("Database/yay.txt", "w") as yay:
+        yay.write("Word Context and Negative Context:\n")
+        yay.write(word_context_negcontext_str)
+        yay.write("\n\nInverse Vocabulary:\n")
+        yay.write(inverse_vocab_str)
+
+write_to_file()
