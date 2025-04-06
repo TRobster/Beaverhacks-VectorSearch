@@ -5,7 +5,7 @@ Origin: Beaverhacks Hackathon
 Purpose: Create neural network "backbone" for vector search algorithm 
 """
 
-sentence = "The wide road shimmered in the hot sun"
+import os, sys
 import numpy as np
 
 
@@ -29,31 +29,35 @@ b2 = np.zeros((1, 1))
 
 # Training loop
 lr = 0.1
-for epoch in range(10000):
-    # Forward pass
-    z1 = X @ W1 + b1
-    a1 = sigmoid(z1)
-    z2 = a1 @ W2 + b2
-    y_pred = sigmoid(z2)
+class Trainer():
+    for epoch in range(10000):
+        # Forward pass
+        z1 = X @ W1 + b1
+        a1 = sigmoid(z1)
+        z2 = a1 @ W2 + b2
+        y_pred = sigmoid(z2)
 
-    # Loss (MSE)
-    loss = np.mean((y - y_pred) ** 2)
+        # Loss (MSE)
+        loss = np.mean((y - y_pred) ** 2)
 
-    # Backpropagation
-    dloss = 2 * (y_pred - y)
-    dz2 = dloss * sigmoid_deriv(z2)
-    dW2 = a1.T @ dz2
-    db2 = np.sum(dz2, axis=0, keepdims=True)
+        # Backpropagation
+        dloss = 2 * (y_pred - y)
+        dz2 = dloss * sigmoid_deriv(z2)
+        dW2 = a1.T @ dz2
+        db2 = np.sum(dz2, axis=0, keepdims=True)
 
-    dz1 = dz2 @ W2.T * sigmoid_deriv(z1)
-    dW1 = X.T @ dz1
-    db1 = np.sum(dz1, axis=0, keepdims=True)
+        dz1 = dz2 @ W2.T * sigmoid_deriv(z1)
+        dW1 = X.T @ dz1
+        db1 = np.sum(dz1, axis=0, keepdims=True)
 
-    # Update weights
-    W2 -= lr * dW2
-    b2 -= lr * db2
-    W1 -= lr * dW1
-    b1 -= lr * db1
+        # Update weights
+        W2 -= lr * dW2
+        b2 -= lr * db2
+        W1 -= lr * dW1
+        b1 -= lr * db1
 
-    if epoch % 1000 == 0:
-        print(f"Epoch {epoch} | Loss: {loss:.4f}")
+        if epoch % 1000 == 0:
+            print(f"Epoch {epoch} | Loss: {loss:.4f}")
+
+
+
