@@ -260,26 +260,6 @@ header a {
   border: 1px solid #ababab;
 }
 
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 10px 20px 10px;
-}
-
-#modal-cancel,
-#modal-accept {
-  margin-right: 20px;
-}
-
-#modal-cancel {
-  color: #333;
-  background-color: #fff;
-}
-
-#modal-cancel:hover {
-  background-color: #eee;
-}
-
 /*
  * 404 page stuff
  */
