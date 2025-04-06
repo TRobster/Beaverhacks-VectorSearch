@@ -14,14 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('filter-text');
     if (searchInput) {
       searchInput.addEventListener('input', handleSearch);
-      searchInput.addEventListener('focus', () => {
-        searchInput.classList.add('active');
-      });
-      searchInput.addEventListener('blur', () => {
-        if (searchInput.value === '') {
-          searchInput.classList.remove('active');
-        }
-      });
     }
     
     // Initial display of cards
@@ -34,14 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Handle search input
 function handleSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
-  const searchInput = event.target;
-  
-  // Add active class if there's text in the input
-  if (searchTerm.length > 0) {
-    searchInput.classList.add('active');
-  } else {
-    searchInput.classList.remove('active');
-  }
   
   // Filter cards based on search term
   filteredCardData = cardData.filter(card => 
@@ -67,20 +51,13 @@ function updateImages() {
   posts.forEach((post, index) => {
     if (index < filteredCardData.length) {
       // Get the image and title elements
-      const imgElement = post.querySelector('img');
+      const imgElement = post.querySelector('.card-image');
       const titleElement = post.querySelector('.post-title');
       
       // Update the image source and title
       if (imgElement) {
-        // Change the image source to the card's image URL
         imgElement.src = filteredCardData[index].imageUrl;
         imgElement.alt = filteredCardData[index].title;
-        
-        // Add a visual indicator that the image has changed
-        imgElement.style.border = '2px solid orange';
-        setTimeout(() => {
-          imgElement.style.border = 'none';
-        }, 500);
       }
       
       if (titleElement) {
