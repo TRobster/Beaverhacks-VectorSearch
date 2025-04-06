@@ -51,7 +51,8 @@ function updateImages() {
   posts.forEach((post, index) => {
     if (index < filteredCardData.length) {
       // Get the image and title elements
-      const imgElement = post.querySelector('.card-image');
+      
+      const imgElement = post.querySelector('#dynamicImage');
       const titleElement = post.querySelector('.post-title');
       
       // Update the image source and title
