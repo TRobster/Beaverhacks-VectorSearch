@@ -101,9 +101,10 @@ header a {
   width: 100%;
 }
 .h2{
-  width: 100px
-  height: 100px
-  padding: 10px
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+ display: flex;
 }
 .post {
   display: inline-block;
