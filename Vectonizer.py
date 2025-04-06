@@ -1,8 +1,9 @@
 import random as r
+import re
 
 # artist,artistIds,asciiName,attractionLights,availability,boosterTypes,borderColor,cardParts,colorIdentity,colorIndicator,colors,defense,duelDeck,edhrecRank,edhrecSaltiness,faceConvertedManaCost,faceFlavorName,faceManaValue,faceName,finishes,flavorName,flavorText,frameEffects,frameVersion,hand,hasAlternativeDeckLimit,hasContentWarning,hasFoil,hasNonFoil,isAlternative,isFullArt,isFunny,isGameChanger,isOnlineOnly,isOversized,isPromo,isRebalanced,isReprint,isReserved,isStarter,isStorySpotlight,isTextless,isTimeshifted,keywords,language,layout,leadershipSkills,life,loyalty,manaCost,manaValue,name,number,originalPrintings,originalReleaseDate,originalText,originalType,otherFaceIds,power,printings,promoTypes,rarity,rebalancedPrintings,relatedCards,securityStamp,setCode,side,signature,sourceProducts,subsets,subtypes,supertypes,text,toughness,type,types,uuid,variations,watermark
 # data = "the sun shined on the white road"
-with open("Database/AllPrintingsCSVFiles/cards.csv", "r") as test:
+with open("Database/AllPrintingsCSVFiles/cards copy.csv", "r") as test:
     testData = test.read()
     lines = testData.splitlines()
     print(len(lines))
@@ -10,20 +11,16 @@ with open("Database/AllPrintingsCSVFiles/cards.csv", "r") as test:
     data = []
     # print(lines)
     print(type(lines))
-    for i in range(9):
+    for i in range(len(lines)):
         splitData.append((lines[i].split(",")))
-        # 
-        data.append(splitData[i][72])
+        # if (len(splitData[i]) != 79):
+            # print(splitData[i])
+            # print()
+        data.append(splitData[i][72].split())
 
-print(len(splitData[1]))
-print(len(splitData[2]))
-print(len(splitData[3]))
-print(len(splitData[4]))
-print(len(splitData[5]))
-print(data)
-quit()
-
+# print(data)
 tokens = data
+print("done")
 # print(len(tokens))
 
 vocab, index = {}, 1  # start indexing from 1
@@ -95,11 +92,13 @@ def returnNegContext(target_num, dic):
 
 word_Context_NegContext = []
 
-for word in range(100):
+print(len(vocab))
+
+for word in range(len(vocab)):
     # print(inverse_vocab[i]  returnContext(i  dictonary))
     # print(inverse_vocab[word]  word  returnContext(word  dictonary)  returnNegContext(word  dictonary))
     word_Context_NegContext.append(inverse_vocab[word])
     word_Context_NegContext.append(returnContext(word, dictonary))
     word_Context_NegContext.append(returnNegContext(word, dictonary))
 
-print(word_Context_NegContext)
+print(len(word_Context_NegContext)/3)
