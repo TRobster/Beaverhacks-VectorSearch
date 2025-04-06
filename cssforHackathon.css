@@ -98,7 +98,11 @@ header a {
 #filter-update-button {
   width: 100%;
 }
-
+.h2{
+  width: 100px
+  height: 100px
+  padding: 10px
+}
 .post {
   display: inline-block;
   vertical-align: top;
