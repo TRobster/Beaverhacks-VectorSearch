@@ -1,7 +1,7 @@
 
 const button= document.getElementById("filter-update-button");
 
-button.addEventListener("click", changeImage)
+button.addEventListener("click", changeimage)
 
 
 function changeimage(){
