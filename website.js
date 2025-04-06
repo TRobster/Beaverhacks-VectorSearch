@@ -5,7 +5,7 @@ let filteredCardData = [];
 // Load card data when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('cards.json');
+    const response = await fetch('cardData.json');
     cardData = await response.json();
     filteredCardData = [...cardData]; // Initialize filtered data with all cards
     console.log('Card data loaded:', cardData);
@@ -72,3 +72,5 @@ function updateImages() {
     }
   });
 }
+
+ 
