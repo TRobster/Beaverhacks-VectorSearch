@@ -1,5 +1,5 @@
 
-const button =document.getElementById("filter-update-button");
+const button= document.getElementById("filter-update-button");
 
 button.addEventListener("click", changeImage)
 
