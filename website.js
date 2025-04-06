@@ -5,7 +5,7 @@ let filteredCardData = [];
 // Load card data when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('cardData.json');
+    const response = await fetch('cards.json');
     cardData = await response.json();
     filteredCardData = [...cardData]; // Initialize filtered data with all cards
     console.log('Card data loaded:', cardData);
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Initial display of cards
-    updateImages();
+    displayCards();
   } catch (error) {
     console.error('Error loading card data:', error);
   }
@@ -35,40 +35,63 @@ function handleSearch(event) {
   console.log('Filtered cards:', filteredCardData);
   
   // Update the display immediately when searching
-  updateImages();
+  displayCards();
 }
 
-const button = document.getElementById("filter-update-button");
-button.addEventListener("click", updateImages);
-
-function updateImages() {
-  console.log("Updating images with card data");
-  
-  // Get all post elements
-  const posts = document.querySelectorAll('.post');
-  
-  // Update each post with data from the JSON
-  posts.forEach((post, index) => {
-    if (index < filteredCardData.length) {
-      // Get the image and title elements
-      const imgElement = post.querySelector('.card-image');
-      const titleElement = post.querySelector('.post-title');
-      
-      // Update the image source and title
-      if (imgElement) {
-        imgElement.src = filteredCardData[index].imageUrl;
-        imgElement.alt = filteredCardData[index].title;
-      }
-      
-      if (titleElement) {
-        titleElement.textContent = filteredCardData[index].title;
-      }
-      
-      // Show the post
-      post.style.display = 'block';
-    } else {
-      // Hide posts that don't have corresponding data
-      post.style.display = 'none';
+// Add event listener to the update button
+const updateButton = document.getElementById("filter-update-button");
+if (updateButton) {
+  updateButton.addEventListener("click", () => {
+    const searchInput = document.getElementById('filter-text');
+    if (searchInput) {
+      const searchTerm = searchInput.value.toLowerCase();
+      filteredCardData = cardData.filter(card => 
+        card.title.toLowerCase().includes(searchTerm)
+      );
+      displayCards();
     }
+  });
+}
+
+// Function to display cards
+function displayCards() {
+  console.log("Displaying cards:", filteredCardData);
+  
+  // Get the posts section
+  const postsSection = document.getElementById('posts');
+  
+  // Clear existing posts
+  postsSection.innerHTML = '';
+  
+  // If no cards match the search, show a message
+  if (filteredCardData.length === 0) {
+    const noResultsMessage = document.createElement('div');
+    noResultsMessage.className = 'post';
+    noResultsMessage.innerHTML = `
+      <div class="post-contents">
+        <div class="post-info-container">
+          <h3>No cards found matching your search.</h3>
+        </div>
+      </div>
+    `;
+    postsSection.appendChild(noResultsMessage);
+    return;
+  }
+  
+  // Create a post for each card
+  filteredCardData.forEach(card => {
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    postElement.innerHTML = `
+      <div class="post-contents">
+        <div class="post-image-container">
+          <img src="${card.imageUrl}" alt="${card.title}" class="card-image">
+        </div>
+        <div class="post-info-container">
+          <a href="#" class="post-title">${card.title}</a>
+        </div>
+      </div>
+    `;
+    postsSection.appendChild(postElement);
   });
 }
