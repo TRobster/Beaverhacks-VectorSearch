@@ -16,7 +16,7 @@ a:hover {
 
 header {
   background-color: #0d6efd;
-  display: flex;
+  display: center;
   align-items: center;
   position: relative;
 }
