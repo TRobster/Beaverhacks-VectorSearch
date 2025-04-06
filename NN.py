@@ -1,6 +1,7 @@
 import numpy as np
-import random
-from Vectonizer import getTokens
+import json
+
+# hey~ if you're reading this I promise there aren't any keys in this code <3
 
 class SkipGramWord2Vec:
     def __init__(self, vocab_size, embedding_dim, learning_rate=0.1):
@@ -17,11 +18,7 @@ class SkipGramWord2Vec:
     
     def forward(self, target, context):
         target_vector = self.target_embeddings[target]
-        while context >= vocab_size:
-            context -= vocab_size
         context_vector = self.context_embeddings[context]
-        # print(inverse_vocab[context])
-        # print(inverse_vocab[target[0]])
         
         # Compute dot product between target and context
         score = np.dot(target_vector, context_vector)
@@ -35,8 +32,6 @@ class SkipGramWord2Vec:
         error = label - probability
         
         # Compute gradients for target and context embeddings
-        while context >= vocab_size:
-            context -= vocab_size
         target_gradient = error * self.context_embeddings[context]
         context_gradient = error * self.target_embeddings[target]
 
@@ -53,28 +48,43 @@ def prepare_data(word_Context_NegContext, vocab_size):
     target_words = []
     context_words = []
     labels = []
-    
-    for i in range(len(word_Context_NegContext)):
 
-        if not i%3 == 0:
-            continue
+    # Precompute context and negative context once for each target
+    for i in range(0, len(word_Context_NegContext), 3):
         target = word_Context_NegContext[i]  # Target word (encoded)
-        context = word_Context_NegContext[i+1]  # Context word (encoded)
-        neg_context = word_Context_NegContext[i+2]  # Negative samples
-        
-        # Positive context pairs
-        target_words.append(target)
+        context = findKeys(word_Context_NegContext[i + 1])  # Context words (encoded)
+        neg_context = findKeys(word_Context_NegContext[i + 2])  # Negative samples
+
+        # Efficiently append all context pairs at once
         for pos in context:
+            target_words.append(target)
             context_words.append(pos)
-        labels.append(1)  # Positive sample
+            labels.append(1)  # Positive sample
         
-        # Negative context pairs
+        # Efficiently append all negative context pairs at once
         for neg in neg_context:
             target_words.append(target)
             context_words.append(neg)
             labels.append(0)  # Negative sample
 
-    return np.array(target_words), np.array(context_words), np.array(labels)
+        # Progress output to monitor
+        if i % 1000 == 0:  # Print every 1000 iterations for feedback
+            print(f"{i} of {len(word_Context_NegContext)}")
+
+    # Convert lists to NumPy arrays in one step
+    target_words = np.array(target_words)
+    context_words = np.array(context_words)
+    labels = np.array(labels)
+
+    return target_words, context_words, labels
+
+def findKeys(trgt):
+    keysFound = []
+    for trg in trgt:
+        for key, value in vocab.items():
+            if value == trg:
+                keysFound.append(vocab[key])
+    return keysFound
 
 def train(skipgram_model, target_words, context_words, labels, epochs=10, batch_size=64):
     num_samples = len(target_words)
@@ -93,10 +103,6 @@ def train(skipgram_model, target_words, context_words, labels, epochs=10, batch_
             batch_targets = target_words[i:i + batch_size]
             batch_contexts = context_words[i:i + batch_size]
             batch_labels = labels[i:i + batch_size]
-
-            # print("batch targs: ",batch_targets)
-            # print("batch contex: ",batch_contexts)
-            # print("batch lab: ",batch_labels)
             
             batch_loss = 0
             for target, context, label in zip(batch_targets, batch_contexts, batch_labels):
@@ -127,9 +133,34 @@ def get_similar_words(word, skipgram_model, top_n=5):
     
     return [(i, sim) for i, sim in similarities]
 
+def parse_dict_string(dict_str):
+    dict_str = dict_str.strip('{}')
+    items = dict_str.split(', ')
+    parsed_dict = {}
+    for item in items:
+        key, value = item.split(': ', 1)
+        key = int(key)
+        value = value.strip("'\"")
+        parsed_dict[key] = value
+    return parsed_dict
+
 # Initialize Skip-Gram model
 embedding_dim = 100
-word_Context_NegContext, inverse_vocab = getTokens()
+texthehe = ""
+vo = ""
+with open("Database/yay.txt", "r") as yay:
+    yayText = (yay.read().split("\n"))
+    texthehe = yayText[1]
+    vo = yayText[4]
+tokensCon = json.loads(texthehe)
+vocablist = parse_dict_string(vo)
+
+inverse_vocab = {i: vocablist[i] for i in range(len(vocablist))}
+vocab = {index: token for token, index in inverse_vocab.items()}
+print(tokensCon[:10])
+for i in range(5):
+    print(inverse_vocab[i])
+word_Context_NegContext = tokensCon
 vocab_size = len(inverse_vocab)  # Assuming vocab is the vocabulary created in getTokens()
 skipgram_model = SkipGramWord2Vec(vocab_size=vocab_size, embedding_dim=embedding_dim)
 
@@ -140,7 +171,7 @@ target_words, context_words, labels = prepare_data(word_Context_NegContext, voca
 train(skipgram_model, target_words, context_words, labels, epochs=100, batch_size=128)
 
 # After training, perform a vector search
-vocab = {index: token for token, index in inverse_vocab.items()}
+
 query_word = vocab["decrease"]  # Query word example
 similar_words = get_similar_words(query_word, skipgram_model)
 print(f"Similar words to '{inverse_vocab[query_word]}':")
